@@ -1,6 +1,5 @@
-# template-tests
-
-> A Vue.js project
+# Twigly
+> Real-time twig template editor
 
 ## Build Setup
 
