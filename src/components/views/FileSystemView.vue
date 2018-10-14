@@ -26,7 +26,13 @@
         message="This folder is empty."
         icon="folder_open"
       />
-      <floating-action-button icon="add" @click="createDirectory"/>
+      <floating-action-button-speed-dial
+        icon="add"
+        :actions="actions"
+        @action-new-directory="createDirectory"
+        @action-new-file="createFile"
+        @action-new-upload="startUpload"
+      />
     </section>
   </article>
 </template>
@@ -36,7 +42,7 @@
   import FileListEntry from "@/components/FileSystem/FileListEntry";
   import FileListParentEntry from "@/components/FileSystem/FileListParentEntry";
   import PathBreadcrumbs from "@/components/FileSystem/PathBreadcrumbs";
-  import FloatingActionButton from "@/components/FloatingActionButton";
+  import FloatingActionButtonSpeedDial from "@/components/FloatingActionButtonSpeedDial";
   import EmptyState from "@/components/EmptyState";
 
   export default {
@@ -46,7 +52,7 @@
       FileListEntry,
       FileListParentEntry,
       PathBreadcrumbs,
-      FloatingActionButton,
+      FloatingActionButtonSpeedDial,
       EmptyState
     },
 
@@ -59,7 +65,12 @@
 
     data() {
       return {
-        currentDirectoryContents: []
+        currentDirectoryContents: [],
+        actions: [
+          { name: "new-directory", icon: "folder", label: "New folder" },
+          { name: "new-file", icon: "insert_drive_file", label: "New file" },
+          { name: "new-upload", icon: "cloud_upload", label: "Upload" }
+        ]
       };
     },
 
@@ -129,7 +140,7 @@
        * TODO: Real prompt
        */
       async createDirectory() {
-        const name = prompt("Please enter the name of the new directory");
+        const name = prompt("Please enter the name of the new directory:");
 
         if (!name) {
           return;
@@ -140,6 +151,24 @@
 
         // Reload the directory list
         this.listDirectory();
+      },
+
+      async createFile() {
+        const name = prompt("Please enter the name of the new file:");
+
+        if (!name) {
+          return;
+        }
+
+        // Create the file
+        await this.$fs.writeFile(Path.join(this.workingDirectory, name));
+
+        // Reload the directory list
+        this.listDirectory();
+      },
+
+      async startUpload() {
+        alert("not yet implemented");
       },
 
       /**

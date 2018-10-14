@@ -112,6 +112,7 @@
     font-size: 1.2rem;
     color: var(--color-interactive-label);
     transition: all 0.125s;
+    user-select: none;
   }
 
   .delete-item-button:focus,

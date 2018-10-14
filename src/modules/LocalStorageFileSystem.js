@@ -246,7 +246,7 @@ class LocalStorageFileSystem extends FileSystem {
     return this._readKey(normalized);
   }
 
-  async writeFile(path, content, flags) {
+  async writeFile(path, content = '', flags = 0) {
     const normalized = Path.normalize(path);
     const parent = Path.parent(normalized);
     let meta = {};
