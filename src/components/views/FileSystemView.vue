@@ -70,20 +70,25 @@
     },
 
     computed: {
+      /**
+       * Retrieves the normalized path
+       */
       workingDirectory() {
         return Path.normalize("/" + this.path);
       },
 
+      /**
+       * Whether the current directory is the root directory
+       */
       isRoot() {
         return this.workingDirectory === "/";
       },
 
+      /**
+       * Retrieves the parent directory of the current directory
+       */
       parentDirectory() {
         return Path.parent(this.workingDirectory);
-      },
-
-      currentDirectoryName() {
-        return Path.basename(this.workingDirectory);
       }
     },
 
@@ -92,6 +97,11 @@
     },
 
     methods: {
+      /**
+       * Navigates to a path
+       *
+       * @param {String} path
+       */
       navigate(path) {
         this.$router.push({
           name: "FileSystem",
@@ -99,6 +109,9 @@
         });
       },
 
+      /**
+       * Lists the contents of a directory
+       */
       async listDirectory() {
         let list;
 
@@ -111,6 +124,10 @@
         this.currentDirectoryContents = list;
       },
 
+      /**
+       * Creates a new directory
+       * TODO: Real prompt
+       */
       async createDirectory() {
         const name = prompt("Please enter the name of the new directory");
 
@@ -125,6 +142,9 @@
         this.listDirectory();
       },
 
+      /**
+       * Deletes a file or directory
+       */
       async deleteItem(path) {
         const item = await this.$fs.get(path);
 
