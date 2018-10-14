@@ -30,6 +30,7 @@
     justify-content: center;
     padding: 2rem;
     color: var(--color-dim);
+    user-select: none;
   }
 
   .empty-state-icon {
