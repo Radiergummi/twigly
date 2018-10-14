@@ -23,6 +23,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 Twigly ships with a few core components that are detailed in the sections below.
 
 ### Filesystem
+![Filesystem UI](./images/twigly-fs.png)
 Template languages, such as twig, invariably revolve around template files. To embrace this concept, Twigly provides a virtual file system, running on localStorage internally - which means all changes are persisted across page reloads.  
 The file system itself is pretty basic, but allows for indefinitely nested directory structures, meta data and automatic caching. Around the core implementation, a couple of abstraction classes ease working and provide a familiar API.
 
