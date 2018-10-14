@@ -28,7 +28,7 @@ The file system itself is pretty basic, but allows for indefinitely nested direc
 
 In fact, the whole filesystem infrastructure has been created to allow for swapping out the persistence backend, so in the future, implementing a `DropboxFileSystem` or a `RestApiFileSystem` will be quite possible. For now, the only actual implementation will be `LocalStorageFileSystem`.
 
-Basically, a file system must inherit from [`src/modules/FileSystem`](./src/modules/FileSystem) and implement its methods. No matter whether the file system works synchronously or asynchronously, all methods MUST return promises as to stay implementation independent. _How_ these methods actually work is completely up to the file system, as long as the public API stays compatible.
+Basically, a file system must inherit from [`src/modules/FileSystem`](./src/modules/FileSystem.js) and implement its methods. No matter whether the file system works synchronously or asynchronously, all methods MUST return promises as to stay implementation independent. _How_ these methods actually work is completely up to the file system, as long as the public API stays compatible.
 
 #### Filesystem API
 All file systems expose the following API:
