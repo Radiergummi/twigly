@@ -3,17 +3,7 @@
     <aside class="tree-area"></aside>
     <section class="directory-area">
       <header class="directory-info">
-        <nav class="path-breadcrumbs">
-          <template v-for="breadcrumb in breadcrumbs">
-            <span :key="'sep-' + breadcrumb" class="path-breadcrumb-separator">/</span>
-            <router-link
-              :key="breadcrumb"
-              :to="{name:'FileSystem',params: {path: ''}}"
-              class="path-breadcrumb"
-            >{{ breadcrumb }}</router-link>
-          </template>
-          <span v-if="!breadcrumbs.length" class="path-breadcrumb-separator">/</span>
-        </nav>
+        <path-breadcrumbs :path="workingDirectory"/>
       </header>
       <ul class="current-path-content">
         <file-list-parent-entry
@@ -45,6 +35,7 @@
   import Path from "@/modules/Path";
   import FileListEntry from "@/components/FileSystem/FileListEntry";
   import FileListParentEntry from "@/components/FileSystem/FileListParentEntry";
+  import PathBreadcrumbs from "@/components/FileSystem/PathBreadcrumbs";
   import FloatingActionButton from "@/components/FloatingActionButton";
   import EmptyState from "@/components/EmptyState";
 
@@ -54,6 +45,7 @@
     components: {
       FileListEntry,
       FileListParentEntry,
+      PathBreadcrumbs,
       FloatingActionButton,
       EmptyState
     },
@@ -78,12 +70,6 @@
     },
 
     computed: {
-      breadcrumbs() {
-        return this.workingDirectory
-          .split("/")
-          .filter(breadcrumb => !!breadcrumb);
-      },
-
       workingDirectory() {
         return Path.normalize("/" + this.path);
       },
@@ -171,45 +157,6 @@
     padding: 1rem;
     line-height: 1;
     border-bottom: 1px solid var(--color-gutter);
-  }
-
-  .path-breadcrumbs {
-    display: flex;
-    align-items: center;
-    user-select: none;
-  }
-
-  .path-breadcrumb,
-  .path-breadcrumb-separator {
-    display: block;
-    padding: 0.5rem;
-    font-size: 1.5rem;
-  }
-
-  .path-breadcrumb {
-    text-decoration: none;
-    border-radius: 3px;
-    color: var(--color-gray);
-    transition: all 0.125s;
-  }
-
-  .path-breadcrumb:focus,
-  .path-breadcrumb:hover {
-    background: var(--color-interactive-highlight);
-  }
-
-  .path-breadcrumb:last-child {
-    color: var(--color-primary);
-    pointer-events: none;
-  }
-
-  .path-breadcrumb-separator {
-    color: var(--color-gray-lighter);
-    cursor: default;
-  }
-
-  .current-path {
-    margin: 0;
   }
 
   .current-path-content {
