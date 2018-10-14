@@ -32,14 +32,29 @@
     },
 
     watch: {
+      message() {
+        if (this.timeout) {
+          clearTimeout(this.timeout);
+          this.timeout = null;
+          this.visible = false;
+          console.log("hiding snackbar after message change");
+
+          setTimeout(() => {
+            console.log("showing snackbar again");
+            this.visible = true;
+            this.scheduleHiding(this.duration);
+          }, 500);
+        }
+      },
+
       visible() {
         console.log("visible changed to " + this.visible + ", scheduling");
-        this.scheduleHiding(this.duration);
+        this.$nextTick(() => this.scheduleHiding(this.duration));
       },
 
       duration() {
         console.log("duration changed to " + this.duration + ", scheduling");
-        this.scheduleHiding(this.duration);
+        this.$nextTick(() => this.scheduleHiding(this.duration));
       }
     },
 
@@ -48,6 +63,7 @@
         if (this.visible && duration > 0) {
           console.log("scheduling snackbar hide in" + duration);
           this.timeout = setTimeout(() => {
+            console.log("hiding snackbar as scheduled");
             this.$emit("update:visible", false);
           }, duration);
         }

@@ -48,7 +48,11 @@
         v-html="output"
       ></div>
     </section>
-    <snack-bar :message="snackbarMessage" :visible.sync="snackbarShown" :duration="error ? 0 : null"/>
+    <snack-bar
+      :message="snackbarMessage"
+      :visible.sync="snackbarShown"
+      :duration="error ? 0 : null"
+    />
   </article>
 </template>
 
