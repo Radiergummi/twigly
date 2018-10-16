@@ -27,6 +27,11 @@ Twigly ships with a few core components that are detailed in the sections below.
 To edit templates, aka. code, we'll need an editor. Twigly provides an integrated one, working on the [virtual filesystem](#filesystem). It allows (or will, soon) for most of the stuff you expect from a template editor - syntax highlighting, automatic or manual saving, suggestions while typing and keyboard shortcuts.  
 Currently, the editor is active work in progress, but you *can* create files, edit them, and save them to the virtual disk.
 
+### Settings
+Twigly provides a few knobs for you to twiggle with (GOT IT??). All of them are accessible via the settings page, bottom left icon.  
+Now, when you're working with a server-less app (as in, everything is running locally in the browser), doing something as trivial storing settings becomes a little harder, conceptually. So, partly to make things easy, but mostly because I can, the settings are stored in a JSON file - within the virtual filesystem. Oh yes. That is _so_ meta.  
+Seriously though, the settings live inside `/settings.json`, and you can view and edit them right from Twigly's editor.
+
 ### Filesystem
 ![Filesystem UI](./images/twigly-fs.png)  
 Template languages, such as twig, invariably revolve around template files. To embrace this concept, Twigly provides a virtual file system, running on localStorage internally - which means all changes are persisted across page reloads.  
