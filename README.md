@@ -22,6 +22,11 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 ## Components
 Twigly ships with a few core components that are detailed in the sections below.
 
+### Code editor
+![Code editor UI](./images/twigly-editor-demo.gif)  
+To edit templates, aka. code, we'll need an editor. Twigly provides an integrated one, working on the [virtual filesystem](#filesystem). It allows (or will, soon) for most of the stuff you expect from a template editor - syntax highlighting, automatic or manual saving, suggestions while typing and keyboard shortcuts.  
+Currently, the editor is active work in progress, but you *can* create files, edit them, and save them to the virtual disk.
+
 ### Filesystem
 ![Filesystem UI](./images/twigly-fs.png)  
 Template languages, such as twig, invariably revolve around template files. To embrace this concept, Twigly provides a virtual file system, running on localStorage internally - which means all changes are persisted across page reloads.  
