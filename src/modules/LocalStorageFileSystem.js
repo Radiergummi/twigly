@@ -1,6 +1,5 @@
-import FileSystem from './FileSystem';
-import FileSystemFile from './FileSystemFile';
-import Path from './Path';
+import FileSystem from '@/modules/FileSystem';
+import Path from '@/modules/Path';
 
 class LocalStorageFileSystem extends FileSystem {
 

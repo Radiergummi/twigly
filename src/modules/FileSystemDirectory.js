@@ -1,5 +1,4 @@
-import FileSystemItem from "./FileSystemItem";
-import Path from "./Path";
+import FileSystemItem from "@/modules/FileSystemItem";
 
 class FileSystemDirectory extends FileSystemItem {
   async getChildren() {

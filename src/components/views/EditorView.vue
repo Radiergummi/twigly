@@ -1,12 +1,33 @@
 <template>
   <article class="view editor-view">
-    <tabs :close-buttons="true" @close="closeTab" @changed="setCurrent">
-      <tab v-for="file in openFiles" :key="file.path" :slug="file.path" :name="file.name">
-        <code-editor>{{file.name}}</code-editor>
-      </tab>
-      <icon-button icon="add" slot="actions" size="small" class="action"/>
-      <empty-state v-if="!openFiles" icon="insert_drive_file" message="No open file"/>
-    </tabs>
+    <nav class="editor-tabs">
+      <button
+        v-for="file in files"
+        :key="file.path"
+        :class="'base-button editor-tab' + (currentFile === file ? ' editor-tab-active' : '')"
+        @click="switchTab(file)"
+      >
+        <div class="editor-tab-content">
+          <span class="editor-tab-label">{{ file.name }}</span>
+          <icon-button
+            icon="close"
+            @click.stop="closeTab(file)"
+            size="extra-small"
+            class="close-editor-tab-button"
+          />
+        </div>
+      </button>
+      <div class="actions">
+        <icon-button icon="add" slot="actions" size="small" class="action"/>
+      </div>
+    </nav>
+    <code-editor
+      v-for="file in files"
+      :key="file.path"
+      :file="file"
+      v-if="file === currentFile"
+    />
+    <empty-state v-if="!files.length" icon="insert_drive_file" message="No open file"/>
   </article>
 </template>
 
@@ -31,43 +52,173 @@
       CodeEditor
     },
 
-    props: {},
+    props: {
+      file: {
+        type: String,
+        required: false
+      }
+    },
 
     data() {
-      return {
-        currentFile: null,
+      const files = [];
 
-        openFiles: [
-          { path: "a", name: "EditorView.vue" },
-          { path: "b", name: "AppMenuItem.vue" },
-          { path: "c", name: "theme.dark.css" }
-        ]
+      return {
+        currentFile: files[1],
+
+        files: files
       };
     },
 
-    computed: {},
+    async mounted() {
+      if (this.file) {
+        const file = await this.$fs.get(this.file);
+
+        this.files.push(file);
+        this.currentFile = file;
+      }
+    },
 
     methods: {
       closeTab({ slug }) {
         console.log(slug);
-        this.openFiles = this.openFiles.filter(file => file.path !== slug);
+        this.files = this.files.filter(file => file.path !== slug);
       },
 
-      setCurrent(tab) {
-        const file = this.openFiles.find(file => file.path === tab.slug);
-
-        if (!file) {
-          return;
+      switchTab(file) {
+        if (this.files.includes(file)) {
+          this.currentFile = file;
         }
-
-        this.currentFile = file;
       }
     }
   };
 </script>
 
 <style scoped>
+  @import "../../styles/buttons.css";
+
+  .editor-tabs {
+    flex: 1 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 2.5rem;
+    padding-top: 5px;
+    border-bottom: 3px solid var(--color-chrome);
+    background-color: var(--color-white-dark);
+    box-shadow: inset 1px 1px 3px -1px rgba(0, 0, 0, 0.25),
+      0 1px 0 0 var(--color-gutter);
+    overflow-x: auto;
+  }
+
+  .editor-tab {
+    position: relative;
+    margin: 0 -1.5rem 0 0;
+    padding: 0 0.25rem;
+    left: 1rem;
+    overflow: hidden;
+    transition: all 0.3s;
+    outline: none;
+    z-index: 0;
+  }
+
+  .editor-tab::before,
+  .editor-tab::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent;
+    background: transparent;
+    transition: inherit;
+  }
+
+  .editor-tab::before {
+    transform: rotate(48deg);
+    left: -18px;
+  }
+
+  .editor-tab::after {
+    transform: rotate(-48deg);
+    right: -18px;
+  }
+
+  .editor-tab-active {
+    z-index: 1;
+  }
+
+  .editor-tab-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    color: var(--color-gray-medium-darker);
+    white-space: nowrap;
+    font-size: 0.9rem;
+    outline: none;
+    user-select: none;
+    transition: inherit;
+  }
+
+  .editor-tab-active .editor-tab-content {
+    background: var(--color-chrome);
+    border-bottom-color: var(--color-primary);
+    color: var(--color-primary);
+    box-shadow: 0 2px 0 -1px var(--color-primary),
+      1px 2px 0 -1px var(--color-primary), -1px 2px 0 -1px var(--color-primary);
+  }
+
+  .editor-tab:not(.editor-tab-active):focus-within::before,
+  .editor-tab:not(.editor-tab-active):hover::before {
+    border-color: transparent var(--color-chrome-highlight) transparent
+      transparent;
+  }
+
+  .editor-tab:not(.editor-tab-active):focus-within::after,
+  .editor-tab:not(.editor-tab-active):hover::after {
+    border-color: transparent transparent transparent
+      var(--color-chrome-highlight);
+  }
+
+  .editor-tab-active::before {
+    border-color: transparent var(--color-chrome) transparent transparent;
+  }
+
+  .editor-tab-active::after {
+    border-color: transparent transparent transparent var(--color-chrome);
+  }
+
+  .editor-tab:hover {
+    transition: all 0.3s;
+  }
+
+  .editor-tab:not(.editor-tab-active):focus-within .editor-tab-content,
+  .editor-tab:not(.editor-tab-active):hover .editor-tab-content {
+    background: var(--color-chrome-highlight);
+    border-bottom-color: var(--color-inactive);
+    color: var(--color-inactive);
+    box-shadow: 0 2px 0 -1px var(--color-inactive),
+      1px 2px 0 -1px var(--color-inactive), -1px 2px 0 -1px var(--color-inactive);
+  }
+
+  .editor-tab .close-editor-tab-button {
+    margin-left: 0.5rem;
+    pointer-events: all;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    margin: 0 0.5rem 0 auto;
+  }
+
+  .actions .action + .action {
+    margin-left: 0.5rem;
+  }
 </style>
-
-
  

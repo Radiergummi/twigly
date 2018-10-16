@@ -1,5 +1,4 @@
-import FileSystemItem from "./FileSystemItem";
-import Path from "./Path";
+import FileSystemItem from "@/modules/FileSystemItem";
 
 class FileSystemFile extends FileSystemItem {
   async getContent() {
@@ -8,6 +7,14 @@ class FileSystemFile extends FileSystemItem {
 
   get content() {
     return this.getContent();
+  }
+
+  async write(content) {
+    return this.fileSystem.writeFile(this.path, content);
+  }
+
+  async append(content) {
+    return this.fileSystem.append(this.path, content);
   }
 
   async getSize() {

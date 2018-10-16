@@ -105,10 +105,19 @@
       }
     },
 
+    watch: {
+      "$slots.default"() {
+        console.log("slot changes");
+        this.loadTabs();
+      }
+    },
+
     methods: {
       loadTabs() {
+        const components = this.$slots.default || [];
+
         // find all children components that are instances of tabs
-        this.tabs = this.$slots.default
+        this.tabs = components
           .map(node => node.componentInstance)
           .filter(child => child && child.$options.name === "tab");
       },
@@ -235,6 +244,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    min-height: 2.5rem;
     border-bottom: 1px solid var(--color-gray-light);
     background-color: var(--color-white);
     box-shadow: inset 1px 1px 3px -1px rgba(0, 0, 0, 0.25);

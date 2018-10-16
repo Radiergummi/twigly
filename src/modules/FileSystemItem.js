@@ -1,7 +1,7 @@
-import FileSystem from "./FileSystem";
-import Path from "./Path";
+import Path from "@/modules/Path";
+import FileSystem from '@/modules/FileSystem';
 
-class FileSystemFile {
+class FileSystemItem {
   constructor(path) {
     this.path = path;
   }
@@ -87,4 +87,4 @@ class FileSystemFile {
   }
 }
 
-export default FileSystemFile;
+export default FileSystemItem;

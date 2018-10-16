@@ -1,17 +1,23 @@
-import FileSystemFile from "./FileSystemFile";
-import FileSystemDirectory from "./FileSystemDirectory";
+import FileSystemFile from "@/modules/FileSystemFile";
+import FileSystemDirectory from "@/modules/FileSystemDirectory";
+
+export const FILE_APPEND = 1;
+
+export const TYPE_FILE = 0;
+
+export const TYPE_DIRECTORY = 1;
 
 class FileSystem {
   static get FILE_APPEND() {
-    return 1;
+    return FILE_APPEND;
   };
 
   static get TYPE_FILE() {
-    return 0;
+    return TYPE_FILE;
   }
 
   static get TYPE_DIRECTORY() {
-    return 1;
+    return TYPE_DIRECTORY;
   }
 
   /**

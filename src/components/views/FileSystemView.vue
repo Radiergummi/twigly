@@ -113,10 +113,23 @@
        *
        * @param {String} path
        */
-      navigate(path) {
+      async navigate(path) {
+        const target = await this.$fs.get(path);
+
+        if (await target.isFile()) {
+          return this.$router.push({
+            name: "Editor",
+            params: {
+              file: target.path
+            }
+          });
+        }
+
         this.$router.push({
           name: "FileSystem",
-          params: { path }
+          params: {
+            path: target.path
+          }
         });
       },
 

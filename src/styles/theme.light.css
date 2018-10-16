@@ -3,6 +3,7 @@
 
   --color-background: var(--color-white);
   --color-chrome: var(--color-white-pure);
+  --color-chrome-highlight: var(--color-gray-lighter);
   --color-gutter: var(--color-white-dark);
   --color-alternative-theme: var(--color-gray-darker);
   --color-chrome-text: var(--color-blue);

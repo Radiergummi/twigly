@@ -52,6 +52,7 @@
   @import "./styles/global.css";
   @import "./styles/theme.light.css";
   @import "./styles/theme.dark.css";
+  @import "./styles/transitions.css";
 
   #app {
     display: grid;
