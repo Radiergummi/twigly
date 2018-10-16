@@ -2,7 +2,8 @@
   <header class="app-header">
     <nav class="breadcrumbs">
       <h1 class="app-name breadcrumb">Twigly</h1>
-      <span class="current-module breadcrumb">{{ $route.meta.breadcrumb }}</span>
+      <span class="breadcrumb-separator material-icons">arrow_right</span>
+      <span :class="'current-module breadcrumb' + (navigated ? ' navigated' : '')">{{ breadcrumb }}</span>
     </nav>
     <button class="switch-theme-button" @click="switchTheme" title="Switch theme"></button>
   </header>
@@ -14,8 +15,25 @@
 
     data() {
       return {
-        theme: "light"
+        theme: "light",
+
+        navigated: false
       };
+    },
+
+    watch: {
+      breadcrumb() {
+        this.navigated = true;
+
+        // Reset the navigated state after the animation is finished
+        setTimeout(() => (this.navigated = false), 450);
+      }
+    },
+
+    computed: {
+      breadcrumb() {
+        return this.$route.meta.breadcrumb;
+      }
     },
 
     methods: {
@@ -38,17 +56,27 @@
     transition: inherit;
     user-select: none;
   }
+
   .breadcrumbs {
     display: flex;
+    align-items: center;
     padding: 0;
+    color: var(--color-chrome-text);
   }
 
-  .breadcrumbs .breadcrumb + .breadcrumb::before {
-    content: "▸";
+  .breadcrumb-separator {
+    display: block;
+  }
+
+  .breadcrumb.navigated {
+    animation-name: shift;
+    animation-duration: 0.45s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
   }
 
   .app-name {
-    margin: 0 0.25rem 0 0;
+    margin: 0;
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -72,5 +100,20 @@
   .switch-theme-button:focus,
   .switch-theme-button:hover {
     box-shadow: 0 1px 8px -1px rgba(0, 0, 0, 0.75);
+  }
+
+  @keyframes shift {
+    0% {
+      transform: translateX(2rem);
+      opacity: 0;
+    }
+
+    75% {
+      transform: translateX(0);
+    }
+
+    100% {
+      opacity: 1;
+    }
   }
 </style>

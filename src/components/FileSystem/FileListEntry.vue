@@ -37,7 +37,7 @@
 
     mounted() {
       this.loadItem();
-    },
+    }, 
 
     methods: {
       async loadItem() {
@@ -52,14 +52,16 @@
 
       deleteItem() {
         if (
-          confirm(
+          !confirm(
             `Are you sure you want to delete ${
               this.file.name
             }? This cannot be undone.`
           )
         ) {
-          this.$emit("delete");
+          return;
         }
+
+        this.$emit("delete");
       }
     }
   };

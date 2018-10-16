@@ -2,6 +2,8 @@
   <nav class="app-menu">
     <app-menu-item target="Dashboard" icon="dashboard"/>
     <app-menu-item target="FileSystem" icon="folder"/>
+    <app-menu-item target="Editor" icon="code"/>
+    <app-menu-item target="Settings" icon="settings" class="settings-item"/>
   </nav>
 </template>
 
@@ -32,5 +34,9 @@
 
   .menu-item + .menu-item {
     margin-top: 1rem;
+  }
+
+  .menu-item.settings-item {
+    margin-top: auto;
   }
 </style>

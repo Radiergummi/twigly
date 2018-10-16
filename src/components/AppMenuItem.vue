@@ -1,12 +1,18 @@
 <template>
-  <router-link :to="route" :class="'menu-item' + (active ? ' menu-item-active' : '')">
-    <span class="material-icons">{{icon}}</span>
+  <router-link :to="route" :class="classes">
+    <material-icon :name="icon"/>
   </router-link>
 </template>
 
 <script>
+  import MaterialIcon from "@/components/MaterialIcon";
+
   export default {
     name: "AppMenuItem",
+
+    components: {
+      MaterialIcon
+    },
 
     props: {
       target: {
@@ -29,6 +35,13 @@
 
       active() {
         return this.$route.name === this.target;
+      },
+
+      classes() {
+        return {
+          "menu-item": true,
+          "menu-item-active": this.active
+        };
       }
     }
   };
@@ -36,6 +49,7 @@
 
 <style scoped>
   .menu-item {
+    flex: 0 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,17 +57,15 @@
     height: 3rem;
     padding: 1rem;
     border-radius: 50%;
+    font-size: 1.4rem;
     text-decoration: none;
-    color: var(--color-interactive-label);
+    color: var(--color-chrome-text);
     transition: inherit;
   }
 
+  .menu-item-active,
   .menu-item:focus,
   .menu-item:hover {
     background: var(--color-interactive-highlight);
-  }
-
-  .menu-item.menu-item-active {
-    color: var(--color-primary);
   }
 </style>

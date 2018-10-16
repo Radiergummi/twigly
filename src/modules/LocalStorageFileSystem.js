@@ -179,6 +179,13 @@ class LocalStorageFileSystem extends FileSystem {
     return window.localStorage.removeItem(key);
   }
 
+  /**
+   * Adds a child to the directory index of the parent directory. All directories in the file system only
+   * know their direct children.
+   * 
+   * @param {String} parentPath 
+   * @param {String} childPath
+   */
   _addToDirectoryIndex(parentPath, childPath) {
     const normalized = Path.normalize(parentPath);
 
@@ -197,6 +204,12 @@ class LocalStorageFileSystem extends FileSystem {
     this._writeKey(normalized, JSON.stringify(parentIndex));
   }
 
+  /**
+   * Removes a child from the directory index of the parent directory.
+   * 
+   * @param {String} parentPath 
+   * @param {String} childPath
+   */
   _removeFromDirectoryIndex(parentPath, childPath) {
     const normalized = Path.normalize(parentPath);
 
@@ -230,6 +243,11 @@ class LocalStorageFileSystem extends FileSystem {
     this._writeMetaKey(normalized, meta);
   }
 
+  /**
+   * Reads the file at the given path
+   * 
+   * @param {String} path 
+   */
   async readFile(path) {
     const normalized = Path.normalize(path);
 
@@ -246,6 +264,13 @@ class LocalStorageFileSystem extends FileSystem {
     return this._readKey(normalized);
   }
 
+  /**
+   * Writes the given content to the file at the given path. If the FileSystem.FILE_APPEND flag gets
+   * passed, the content will be appended to the existing file.
+   * @param {String} path 
+   * @param {String} content 
+   * @param {Number} flags 
+   */
   async writeFile(path, content = '', flags = 0) {
     const normalized = Path.normalize(path);
     const parent = Path.parent(normalized);
@@ -288,6 +313,11 @@ class LocalStorageFileSystem extends FileSystem {
     this._addToDirectoryIndex(parent, normalized);
   }
 
+  /**
+   * Deletes the file at the given path
+   * 
+   * @param {String} path 
+   */
   async deleteFile(path) {
     const normalized = Path.normalize(path);
 
@@ -304,20 +334,37 @@ class LocalStorageFileSystem extends FileSystem {
     this._removeFromDirectoryIndex(Path.parent(normalized), normalized);
   }
 
+  /**
+   * Checks whether the file or directory at the given path exists
+   * 
+   * @param {String} path 
+   */
   async exists(path) {
     return this._checkKey(Path.normalize(path));
   }
 
+  /**
+   * Creates a directory at the given path. If recursive is passed, all missing segments will 
+   * be created, too.
+   * 
+   * @param {String}  path 
+   * @param {Boolean} recursive 
+   */
   async createDirectory(path, recursive = false) {
     const normalized = Path.normalize(path);
     const parent = Path.parent(normalized);
 
-    if (!await this.isDirectory(parent)) {
+    if (!recursive && !await this.isDirectory(parent)) {
       throw new Error(`Not a directory: ${parent}`);
     }
 
-    if (await this.exists(normalized)) {
+    if (!recursive && await this.exists(normalized)) {
       throw new Error(`Cannot create directory ${path}: File exists`)
+    }
+
+    if (recursive && !await this.exists(normalized)) {
+      console.log(`Parent ${parent} is not a directory`);
+      this.createDirectory(parent, true);
     }
 
     this._writeKey(normalized, '[]');
@@ -331,6 +378,11 @@ class LocalStorageFileSystem extends FileSystem {
     this._addToDirectoryIndex(parent, normalized);
   }
 
+  /**
+   * Reads the children paths of the given directory
+   * 
+   * @param {String} path 
+   */
   async readDirectory(path) {
     const normalized = Path.normalize(path);
     const cacheKey = this._resolveKey(normalized);
@@ -347,6 +399,12 @@ class LocalStorageFileSystem extends FileSystem {
     return paths;
   }
 
+  /**
+   * Deletes the directory at the given path. If recursive is passed, any children nodes will be deleted, too.
+   * 
+   * @param {String}  path 
+   * @param {Boolean} recursive 
+   */
   async deleteDirectory(path, recursive = false) {
     const normalized = Path.normalize(path);
 
@@ -361,10 +419,17 @@ class LocalStorageFileSystem extends FileSystem {
         throw new Error(`Cannot delete ${normalized}: Directory is not empty`);
       }
 
+      console.log('Recursively deleting all children of ' + normalized);
+
       // TODO: Delete children
       for (let child of directoryContent) {
-        console.debug('Not implemented');
+        const childPath = Path.normalize(Path.join(normalized, child));
+
+        console.log('Deleting child ' + childPath);
+        this.deleteDirectory(childPath, true);
       }
+
+      alert('Recursive deletion is not implemented yet.')
     }
 
     this._removeFromDirectoryIndex(Path.parent(normalized), normalized);

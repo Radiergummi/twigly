@@ -1,13 +1,19 @@
 <template>
   <article class="empty-state">
-    <span class="empty-state-icon material-icons">{{ icon }}</span>
+    <material-icon class="empty-state-icon" :name="icon"/>
     <span class="empty-state-message">{{ message }}</span>
   </article>
 </template>
 
 <script>
+  import MaterialIcon from "@/components/MaterialIcon";
+
   export default {
     name: "EmptyState",
+
+    components: {
+      MaterialIcon
+    },
 
     props: {
       icon: {
