@@ -2,7 +2,7 @@
   <article class="code-editor">
     <textarea class="code-editor-input" v-model="content" autofocus ref="editorInput"></textarea>
     <transition name="appear">
-      <floating-action-button v-show="pendingChanges" icon="save" @click="updateFile"/>
+      <floating-action-button v-show="pendingChanges && !autoSave" icon="save" @click="updateFile"/>
     </transition>
   </article>
 </template>

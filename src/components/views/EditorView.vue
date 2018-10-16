@@ -22,10 +22,11 @@
       </div>
     </nav>
     <code-editor
+      v-if="file === currentFile"
       v-for="file in files"
       :key="file.path"
       :file="file"
-      v-if="file === currentFile"
+      :auto-save="autoSaveEnabled"
     />
     <empty-state v-if="!files.length" icon="insert_drive_file" message="No open file"/>
   </article>
@@ -65,7 +66,9 @@
       return {
         currentFile: files[1],
 
-        files: files
+        files: files,
+
+        autoSaveEnabled: false
       };
     },
 
@@ -76,6 +79,11 @@
         this.files.push(file);
         this.currentFile = file;
       }
+
+      this.autoSaveEnabled = await this.$settings.value(
+        "editorAutoSaveEnabled",
+        false
+      );
     },
 
     methods: {

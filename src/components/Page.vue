@@ -32,6 +32,8 @@
   .page {
     width: 100%;
     max-width: 49.5rem;
+    max-height: calc(100% - 2rem);
+    overflow-y: auto;
     margin: 1rem auto 0;
     padding: 1rem;
     border-radius: 3px;
