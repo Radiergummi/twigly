@@ -1,0 +1,15 @@
+#app.theme-dark {
+  --color-primary: var(--color-blue);
+
+  --color-background: var(--color-gray-darker);
+  --color-chrome: var(--color-black-pure);
+  --color-gutter: var(--color-gray-dark);
+  --color-alternative-theme: var(--color-gray-lighter);
+  --color-chrome-text: var(--color-blue-light);
+  --color-text: var(--color-blue-dark);
+  --color-interactive: var(--color-gray-darker);
+  --color-interactive-label: var(--color-gray-darkish);
+  --color-interactive-highlight: var(--color-black-pure);
+  --color-interactive-label-highlight: var(--color-gray-darker);
+  --color-dim: var(--color-gray-light);
+}

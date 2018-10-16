@@ -1,0 +1,36 @@
+:root {
+
+  /******************************************************
+   * Color definitions
+   ******************************************************/
+  --color-white-pure: #fff;
+  --color-white: #fafafa;
+  --color-white-dark: #eee;
+  --color-gray-lighter: #ddd;
+  --color-gray-light: #ccc;
+  --color-gray-medium: #aaa;   
+  --color-gray: #888;
+  --color-gray-darkish: #232f34;
+  --color-gray-dark: #344955;
+  --color-gray-darker: #232f34;
+  --color-black-pure: #000; 
+
+  --color-blue-lighter: #449fee;
+  --color-blue-light: #5c97df; /* #1c69ad; */ 
+  --color-blue: #1c69ad; /* #1c69ad; */ 
+  --color-blue-dark: #003f7d; /*#215079; */
+
+  --color-red: rgb(218, 82, 82);
+
+  /******************************************************
+   * Typography
+   ******************************************************/
+  --font-family-text: "Roboto", Helvetica, Arial, sans-serif;
+  
+  /******************************************************
+   * Shadows
+   ******************************************************/
+  --shadow-base: 0 1px 3px -1px rgba(0, 0, 0, 0.25);
+  --shadow-raised: 0 1px 1px -1px rgba(0, 0, 0, 0.45), 0 1px 5px -1px rgba(0, 0, 0, 0.35);
+}
+ 
