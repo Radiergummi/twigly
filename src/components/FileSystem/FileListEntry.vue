@@ -37,13 +37,17 @@
 
     mounted() {
       this.loadItem();
-    }, 
+    },
 
     methods: {
       async loadItem() {
-        this.file = await this.$fs.get(this.path);
-        this.meta = await this.file.getMeta();
-        this.isDirectory = await this.file.isDirectory();
+        try {
+          this.file = await this.$fs.get(this.path);
+          this.meta = await this.file.getMeta();
+          this.isDirectory = await this.file.isDirectory();
+        } catch (error) {
+          console.log(`Could not load file ${this.path}: ${error.message}`);
+        }
       },
 
       getDate(timestamp) {

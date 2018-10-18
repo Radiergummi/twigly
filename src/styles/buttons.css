@@ -10,6 +10,9 @@
 }
 
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   -webkit-appearance: none;
   margin: 0;
   padding: 0.5rem 1rem;
@@ -30,8 +33,25 @@
 
 .button:focus,
 .button:hover {
+  background: var(--color-dim);
+  color: var(--color-primary-contrast);
+}
+
+.button.button-primary {
   background: var(--color-primary);
-  color: var(--color-white);
+  color: var(--color-primary-contrast);
+  box-shadow: var(--shadow-raised);
+}
+
+.button.button.button-primary:disabled {
+  background: var(--color-dim);
+  box-shadow: none;  
+}
+
+.button.button-primary:focus,
+.button.button-primary:hover {
+  background: var(--color-primary-dim);
+  color: var(--color-primary-contrast);
   box-shadow: var(--shadow-raised);
 }
 
@@ -63,4 +83,16 @@
 .button.button.icon-button.extra-small .material-icons {
   font-size: 0.8rem;
   line-height: 1rem;
+}
+
+.button + .button {
+  margin-left: 0.5rem;
+}
+
+.button > .material-icons:not(:only-child):first-child {
+  margin-right: 0.5rem;
+}
+
+.button > .material-icons:not(:only-child):last-child {
+  margin-left: 0.5rem;
 }

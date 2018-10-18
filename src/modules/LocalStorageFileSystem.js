@@ -467,6 +467,40 @@ class LocalStorageFileSystem extends FileSystem {
 
     return this._readMetaKey(normalized);
   }
+
+  /**
+   * Retrieves the user space in bytes
+   *
+   * @returns {Number}
+   */
+  async getUsed() {
+    return new Blob(Object.values(window.localStorage)).size;
+  }
+
+  /**
+   * Retrieves the available space in bytes.
+   * Note: For the LocalStorage file system, this number is fixed to 5MB, 
+   * since that's what the W3C proposes.
+   * 
+   * @returns {Number}
+   */
+  async getTotal() {
+    return 5242880;
+  }
+
+  /**
+   * Retrieves the available space in bytes
+   * 
+   * @returns {Number}
+   */
+  async getAvailable() {
+    const [total, used] = await Promise.all([
+      this.getTotal(),
+      this.getUsed()
+    ]);
+
+    return total - used;
+  }
 }
 
 export default LocalStorageFileSystem;

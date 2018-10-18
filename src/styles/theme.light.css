@@ -1,5 +1,7 @@
 #app.theme-light {
   --color-primary: var(--color-blue-light);
+  --color-primary-contrast: var(--color-white);
+  --color-primary-dim: var(--color-blue);
 
   --color-background: var(--color-white);
   --color-chrome: var(--color-white-pure);

@@ -77,6 +77,34 @@ class FileSystem {
 
   async getMetaData(path) { }
 
+  /**
+   * Retrieves the user space in bytes
+   *
+   * @returns {Number}
+   */
+  async getUsed() { }
+
+  /**
+   * Retrieves the available space in bytes
+   * 
+   * @returns {Number}
+   */
+  async getTotal() { }
+
+  /**
+   * Retrieves the available space in bytes
+   * 
+   * @returns {Number}
+   */
+  async getAvailable() {
+    const [total, used] = await Promise.all([
+      this.getTotal(),
+      this.getUsed()
+    ]);
+
+    return total - used;
+  }
+
   async get(path) {
     if (!await this.exists(path)) {
       throw new Error(`No such file: ${path}`);

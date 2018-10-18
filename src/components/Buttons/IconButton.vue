@@ -1,5 +1,5 @@
 <template>
-  <button :class="'button icon-button ' + size">
+  <button :class="'button icon-button ' + size" @click="$emit('click')">
     <material-icon :name="icon"/>
   </button>
 </template>

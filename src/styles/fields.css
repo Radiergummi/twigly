@@ -1,0 +1,134 @@
+.field {
+  position: relative;
+  display: flex;
+  width: 100%;
+  line-height: 1;
+  font-size: 1rem;
+  font-family: var(--font-family-text);
+  transition: all 0.125s;
+}
+
+.field .field-label {
+  position: absolute;
+  flex: 1 1 100%;
+  top: 1rem;
+  left: 0;
+  border-top: 1.5px solid transparent;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  transition: inherit;
+  color: var(--color-inactive);
+  user-select: none;
+  cursor: text;
+}
+
+.field .field-input {
+  -webkit-appearance: none;
+  flex: 1 1 100%;
+  padding: 1rem 0 0.25rem;
+  border: none;
+  border-bottom: 1px solid var(--color-dim);
+  background: transparent;
+  outline: none;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  transition: inherit;
+}
+
+.field:focus-within .field-input {
+  border-bottom: 1px solid var(--color-primary);
+  box-shadow: 0 1px 0 0 var(--color-primary);
+}
+
+
+.field .field-input:not(:placeholder-shown) {
+  border-bottom: 1px solid var(--color-primary);
+}
+
+.field .field-input:invalid,
+.field .field-input.invalid {
+  border-bottom: 1px solid var(--color-red);
+}
+
+.field .field-input:disabled {
+  border-bottom: 1px dotted var(--color-inactive);
+}
+
+.field .field-input:disabled + .field-label {
+  cursor: default;
+}
+
+.field:focus-within .field-input:invalid,
+.field:focus-within .field-input.invalid {
+  border-bottom: 1px solid var(--color-red);
+  box-shadow: 0 1px 0 0 var(--color-red);
+}
+
+.field .field-input:not(:placeholder-shown) + .field-label,
+.field:focus-within .field-label {
+  top: 0;
+  font-size: 0.75rem;
+}
+
+.field:focus-within .field-label {
+  color: var(--color-primary);
+}
+
+.field .field-input:invalid + .field-label,
+.field .field-input.invalid + .field-label {
+  color: var(--color-red);
+}
+
+.field .field-input::-webkit-input-placeholder {
+  color: transparent;
+  user-select: none;
+}
+
+.field + .field {
+  margin-top:1rem;
+}
+
+.field .field-input-icon {
+  position: absolute;
+  user-select: none
+}
+
+.field .field-input-icon.field-input-icon-right {
+  right: 0;
+  top: 1rem;
+}
+
+.field:focus-within .field-input-icon {
+  color: var(--color-primary);
+}
+
+.field select.field-input {
+  line-height: 1.2;
+  padding-top: 1.05rem;
+}
+
+.field .field-input[type="checkbox"] {
+  flex: 0 0 1rem;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  -webkit-appearance: checkbox;
+  background: var(--color-interactive);
+  order: 1;
+  align-self: center;
+}
+
+.field:focus-within .field-input[type="checkbox"] {
+  border-bottom: none;
+  box-shadow: none
+}
+
+.field .field-input[type="checkbox"] + .field-label {
+  position: relative;
+  order: 2;
+  align-self: center;
+  margin-left: 0.5rem;
+  cursor: default;
+}

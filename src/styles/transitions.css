@@ -4,3 +4,24 @@
 .appear-enter, .appear-leave-to {
   opacity: 0;
 }
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-scale-enter-active,
+.fade-scale-leave-active {
+  transition: transform 0.125s, opacity 0.25s;
+}
+
+.fade-scale-enter,
+.fade-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}

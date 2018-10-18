@@ -1,59 +1,28 @@
 <template>
   <article class="view file-system-view">
     <aside class="tree-area"></aside>
-    <section class="directory-area">
-      <header class="directory-info">
-        <path-breadcrumbs :path="workingDirectory"/>
-      </header>
-      <ul class="current-path-content">
-        <file-list-parent-entry
-          v-if="!isRoot"
-          class="current-path-item parent-item"
-          :path="parentDirectory"
-          @click.native="navigate(parentDirectory)"
-        />
-        <file-list-entry
-          class="current-path-item"
-          v-for="path in currentDirectoryContents"
-          :path="path"
-          :key="path"
-          @delete="deleteItem(path)"
-          @click.native="navigate(path)"
-        />
-      </ul>
-      <empty-state
-        v-show="currentDirectoryContents.length === 0"
-        message="This folder is empty."
-        icon="folder_open"
-      />
-      <floating-action-button-speed-dial
-        icon="add"
-        :actions="actions"
-        @action-new-directory="createDirectory"
-        @action-new-file="createFile"
-        @action-new-upload="startUpload"
-      />
-    </section>
+    <directory-browser
+      class="directory-area"
+      :path="path"
+      :show-actions="true"
+      ref="browser"
+      @navigate="navigate"
+      @open="openFile"
+    />
   </article>
 </template>
 
 <script>
   import Path from "@/modules/Path";
-  import FileListEntry from "@/components/FileSystem/FileListEntry";
-  import FileListParentEntry from "@/components/FileSystem/FileListParentEntry";
-  import PathBreadcrumbs from "@/components/FileSystem/PathBreadcrumbs";
+  import DirectoryBrowser from "@/components/FileSystem/DirectoryBrowser";
   import FloatingActionButtonSpeedDial from "@/components/FloatingActionButtonSpeedDial";
-  import EmptyState from "@/components/EmptyState";
 
   export default {
     name: "FileSystemView",
 
     components: {
-      FileListEntry,
-      FileListParentEntry,
-      PathBreadcrumbs,
-      FloatingActionButtonSpeedDial,
-      EmptyState
+      DirectoryBrowser,
+      FloatingActionButtonSpeedDial
     },
 
     props: {
@@ -64,90 +33,10 @@
     },
 
     data() {
-      return {
-        currentDirectoryContents: [],
-        actions: [
-          { name: "new-directory", icon: "folder", label: "New folder" },
-          { name: "new-file", icon: "insert_drive_file", label: "New file" },
-          { name: "new-upload", icon: "cloud_upload", label: "Upload" }
-        ]
-      };
-    },
-
-    watch: {
-      workingDirectory() {
-        this.listDirectory();
-      }
-    },
-
-    computed: {
-      /**
-       * Retrieves the normalized path
-       */
-      workingDirectory() {
-        return Path.normalize("/" + this.path);
-      },
-
-      /**
-       * Whether the current directory is the root directory
-       */
-      isRoot() {
-        return this.workingDirectory === "/";
-      },
-
-      /**
-       * Retrieves the parent directory of the current directory
-       */
-      parentDirectory() {
-        return Path.parent(this.workingDirectory);
-      }
-    },
-
-    mounted() {
-      this.listDirectory();
+      return {};
     },
 
     methods: {
-      /**
-       * Navigates to a path
-       *
-       * @param {String} path
-       */
-      async navigate(path) {
-        const target = await this.$fs.get(path);
-
-        if (await target.isFile()) {
-          return this.$router.push({
-            name: "Editor",
-            params: {
-              file: target.path
-            }
-          });
-        }
-
-        this.$router.push({
-          name: "FileSystem",
-          params: {
-            path: target.path
-          }
-        });
-      },
-
-      /**
-       * Lists the contents of a directory
-       */
-      async listDirectory() {
-        let list;
-
-        try {
-          list = await this.$fs.readDirectory(this.workingDirectory);
-        } catch (error) {
-          alert(error.message);
-        }
-
-        this.currentDirectoryContents = list;
-      },
-
       /**
        * Creates a new directory
        * TODO: Real prompt
@@ -163,7 +52,7 @@
         await this.$fs.createDirectory(Path.join(this.workingDirectory, name));
 
         // Reload the directory list
-        this.listDirectory();
+        this.$refs.browser.listDirectory();
       },
 
       async createFile() {
@@ -177,7 +66,7 @@
         await this.$fs.writeFile(Path.join(this.workingDirectory, name));
 
         // Reload the directory list
-        this.listDirectory();
+        this.$refs.browser.listDirectory();
       },
 
       async startUpload() {
@@ -192,7 +81,25 @@
 
         await item.delete();
 
-        this.listDirectory();
+        this.$refs.browser.listDirectory();
+      },
+
+      openFile(file) {
+        this.$router.push({
+          name: "Editor",
+          params: {
+            file: target.path
+          }
+        });
+      },
+
+      navigate(target) {
+        this.$router.push({
+          name: "FileSystem",
+          params: {
+            path: target.path
+          }
+        });
       }
     }
   };
@@ -213,19 +120,6 @@
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
-  }
-
-  .directory-info {
-    padding: 1rem;
-    line-height: 1;
-    border-bottom: 1px solid var(--color-gutter);
-  }
-
-  .current-path-content {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto;
   }
 </style>
 

@@ -10,9 +10,7 @@
           <div class="modal-dialog-header-actions">
             <slot name="header"/>
           </div>
-          <button class="base-button modal-dialog-close-button" @click="close">
-            <span class="material-icons">close</span>
-          </button>
+          <icon-button icon="close" class="modal-dialog-close-button" @click="close"/>
         </header>
         <div class="modal-dialog-body">
           <slot/>
@@ -20,9 +18,10 @@
         <footer class="modal-dialog-footer" v-if="actions">
           <button class="button modal-dialog-footer-action-button" @click="close">Cancel</button>
           <button
-            :class="'button modal-dialog-footer-action-button ' + (action.danger ? 'button-danger' : '')"
+            :class="{ 'button': true, 'modal-dialog-footer-action-button': true, 'button-danger': action.danger, 'button-primary': action.primary }"
             v-for="action in actions"
             :key="action.name"
+            :disabled="action.disabled"
             @click="callAction(action)"
           >{{ action.label }}</button>
         </footer>
@@ -32,8 +31,14 @@
 </template>
 
 <script>
+  import IconButton from "@/components/Buttons/IconButton";
+
   export default {
     name: "ModalDialog",
+
+    components: {
+      IconButton
+    },
 
     props: {
       title: {
@@ -128,6 +133,7 @@
   .modal-dialog-footer {
     display: flex;
     justify-content: flex-end;
+    flex-wrap: wrap;
     padding: 1rem;
   }
 
@@ -139,24 +145,15 @@
     color: var(--color-red);
   }
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.25s;
-  }
+  @media screen and (max-width: 400px) {
+    .modal-dialog {
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+    }
 
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
-  }
-
-  .fade-scale-enter-active,
-  .fade-scale-leave-active {
-    transition: transform 0.125s, opacity 0.25s;
-  }
-
-  .fade-scale-enter,
-  .fade-scale-leave-to {
-    opacity: 0;
-    transform: scale(0.9);
+    .modal-dialog-header {
+      padding: 0.5rem 0.5rem 0.5rem 1rem;
+    }
   }
 </style>

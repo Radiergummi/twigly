@@ -18,17 +18,29 @@
         </div>
       </button>
       <div class="actions">
-        <icon-button icon="add" slot="actions" size="small" class="action"/>
+        <icon-button
+          icon="add"
+          slot="actions"
+          size="small"
+          class="action"
+          @click="toggleFilePicker"
+        />
       </div>
     </nav>
-    <code-editor
-      v-if="file === currentFile"
-      v-for="file in files"
-      :key="file.path"
-      :file="file"
-      :auto-save="autoSaveEnabled"
-    />
-    <empty-state v-if="!files.length" icon="insert_drive_file" message="No open file"/>
+    <div class="editor-content">
+      <code-editor
+        v-if="file === currentFile"
+        v-for="file in files"
+        :key="file.path"
+        :file="file"
+        :auto-save="autoSaveEnabled"
+      />
+      <variables-panel v-if="currentFile"/>
+      <empty-state v-if="!files.length" icon="insert_drive_file" message="No open file"/>
+    </div>
+    <modal-dialog :visible.sync="openFileModalVisible" title="Open file">
+      <directory-browser path="/" @open="openFile"/>
+    </modal-dialog>
   </article>
 </template>
 
@@ -40,6 +52,9 @@
   import Tabs from "@/components/Tabs/Tabs";
   import Tab from "@/components/Tabs/Tab";
   import CodeEditor from "@/components/Editor/CodeEditor";
+  import ModalDialog from "@/components/Modals/ModalDialog";
+  import DirectoryBrowser from "@/components/FileSystem/DirectoryBrowser";
+  import VariablesPanel from "@/components/Editor/VariablesPanel";
 
   export default {
     name: "EditorView",
@@ -50,7 +65,10 @@
       EmptyState,
       Tabs,
       Tab,
-      CodeEditor
+      CodeEditor,
+      VariablesPanel,
+      ModalDialog,
+      DirectoryBrowser
     },
 
     props: {
@@ -68,7 +86,9 @@
 
         files: files,
 
-        autoSaveEnabled: false
+        autoSaveEnabled: false,
+
+        openFileModalVisible: false
       };
     },
 
@@ -78,6 +98,10 @@
 
         this.files.push(file);
         this.currentFile = file;
+      }
+
+      if (this.files.length === 0) {
+        this.openFilePicker();
       }
 
       this.autoSaveEnabled = await this.$settings.value(
@@ -96,6 +120,24 @@
         if (this.files.includes(file)) {
           this.currentFile = file;
         }
+      },
+
+      toggleFilePicker() {
+        this.openFileModalVisible = !this.openFileModalVisible;
+      },
+
+      closeFilePicker() {
+        this.openFileModalVisible = false;
+      },
+
+      openFilePicker() {
+        this.openFileModalVisible = true;
+      },
+
+      openFile(file) {
+        this.files.push(file);
+        this.currentFile = file;
+        this.closeFilePicker();
       }
     }
   };
@@ -113,8 +155,7 @@
     padding-top: 5px;
     border-bottom: 3px solid var(--color-chrome);
     background-color: var(--color-white-dark);
-    box-shadow: inset 1px 1px 3px -1px rgba(0, 0, 0, 0.25),
-      0 1px 0 0 var(--color-gutter);
+    box-shadow: inset 1px 1px 3px -1px rgba(0, 0, 0, 0.25);
     overflow-x: auto;
   }
 
@@ -227,6 +268,20 @@
 
   .actions .action + .action {
     margin-left: 0.5rem;
+  }
+
+  .editor-content {
+    display: flex;
+    height: calc(100% - 0.5rem);
+  }
+
+  .editor-content .code-editor {
+    flex: 1 1 auto;
+    box-shadow: inset -1px 1px 3px -1px rgba(0, 0, 0, 0.25);
+  }
+
+  .editor-content .variables-panel {
+    flex: 0 0 20%;
   }
 </style>
  
