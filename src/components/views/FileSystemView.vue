@@ -3,7 +3,8 @@
     <aside class="tree-area"></aside>
     <directory-browser
       class="directory-area"
-      :path="path"
+      v-if="currentPath"
+      :path.sync="currentPath"
       :show-actions="true"
       ref="browser"
       @navigate="navigate"
@@ -33,7 +34,13 @@
     },
 
     data() {
-      return {};
+      return {
+        currentPath: ""
+      };
+    },
+
+    mounted() {
+      this.currentPath = Path.normalize("/" + this.path);
     },
 
     methods: {
@@ -49,7 +56,7 @@
         }
 
         // Create the directory
-        await this.$fs.createDirectory(Path.join(this.workingDirectory, name));
+        await this.$fs.createDirectory(Path.join(this.currentPath, name));
 
         // Reload the directory list
         this.$refs.browser.listDirectory();
@@ -63,7 +70,7 @@
         }
 
         // Create the file
-        await this.$fs.writeFile(Path.join(this.workingDirectory, name));
+        await this.$fs.writeFile(Path.join(this.currentPath, name));
 
         // Reload the directory list
         this.$refs.browser.listDirectory();
@@ -88,7 +95,7 @@
         this.$router.push({
           name: "Editor",
           params: {
-            file: target.path
+            file: file.path
           }
         });
       },

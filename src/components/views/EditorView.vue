@@ -82,7 +82,7 @@
       const files = [];
 
       return {
-        currentFile: files[1],
+        currentFile: null,
 
         files: files,
 
@@ -92,18 +92,18 @@
       };
     },
 
+    beforeRouteEnter(to, from, next) {
+      console.log("before enter");
+      return next(async vm => {
+        await vm.loadFile();
+
+        if (vm.files.length === 0) {
+          vm.openFilePicker();
+        }
+      });
+    },
+
     async mounted() {
-      if (this.file) {
-        const file = await this.$fs.get(this.file);
-
-        this.files.push(file);
-        this.currentFile = file;
-      }
-
-      if (this.files.length === 0) {
-        this.openFilePicker();
-      }
-
       this.autoSaveEnabled = await this.$settings.value(
         "editorAutoSaveEnabled",
         false
@@ -111,6 +111,30 @@
     },
 
     methods: {
+      async loadFile() {
+        if (!this.file) {
+          return;
+        }
+
+        let file;
+        console.log(this.getFile(this.file));
+        // If this file is already opened, focus the tab
+        if ((file = this.getFile(this.file))) {
+          return this.switchTab(file);
+        }
+
+        file = await this.$fs.get(this.file);
+
+        console.log(this.file, file, this.files, this.files.includes(file));
+        // Add the new file
+        this.files.push(file);
+        this.currentFile = file;
+      },
+
+      getFile(path) {
+        return this.files.find(file => file.path === path);
+      },
+
       closeTab({ slug }) {
         console.log(slug);
         this.files = this.files.filter(file => file.path !== slug);
@@ -253,6 +277,23 @@
     color: var(--color-inactive);
     box-shadow: 0 2px 0 -1px var(--color-inactive),
       1px 2px 0 -1px var(--color-inactive), -1px 2px 0 -1px var(--color-inactive);
+  }
+
+  .editor-tab:not(.editor-tab-active):not(:hover)
+    + .editor-tab:not(.editor-tab-active):not(:hover)
+    .editor-tab-content::before {
+    background: var(--color-inactive);
+  }
+
+  .editor-tab .editor-tab-content::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 0.5rem;
+    height: 1rem;
+    width: 1px;
+    pointer-events: none;
+    transition: background 0.125s;
   }
 
   .editor-tab .close-editor-tab-button {

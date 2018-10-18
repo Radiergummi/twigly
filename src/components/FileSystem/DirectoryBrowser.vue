@@ -1,7 +1,7 @@
 <template>
   <article class="directory-browser" v-if="currentDirectoryContents">
     <header class="directory-info">
-      <path-breadcrumbs :path="workingDirectory"/>
+      <path-breadcrumbs :path="path"/>
     </header>
     <ul class="current-path-content">
       <file-list-parent-entry
@@ -68,8 +68,6 @@
 
     data() {
       return {
-        workingDirectory: "",
-
         currentDirectoryContents: [],
 
         actions: [
@@ -81,8 +79,7 @@
     },
 
     watch: {
-      workingDirectory() {
-        console.log("working directory changed");
+      path() {
         this.listDirectory();
       }
     },
@@ -92,20 +89,18 @@
        * Whether the current directory is the root directory
        */
       isRoot() {
-        return this.workingDirectory === "/";
+        return this.path === "/";
       },
 
       /**
        * Retrieves the parent directory of the current directory
        */
       parentDirectory() {
-        return Path.parent(this.workingDirectory);
+        return Path.parent(this.path);
       }
     },
 
     mounted() {
-      this.workingDirectory = Path.normalize("/" + this.path);
-
       this.listDirectory();
     },
 
@@ -116,7 +111,6 @@
        * @param {String} path
        */
       async navigate(path) {
-        console.log("navigating to ", path);
         const target = await this.$fs.get(path);
 
         if (await target.isFile()) {
@@ -134,8 +128,7 @@
         let list;
 
         try {
-          list = await this.$fs.readDirectory(this.workingDirectory);
-          console.log("current directory content:", list);
+          list = await this.$fs.readDirectory(this.path);
         } catch (error) {
           alert(error.message);
         }
@@ -155,7 +148,7 @@
         }
 
         // Create the directory
-        await this.$fs.createDirectory(Path.join(this.workingDirectory, name));
+        await this.$fs.createDirectory(Path.join(this.path, name));
 
         // Reload the directory list
         this.listDirectory();
@@ -169,7 +162,7 @@
         }
 
         // Create the file
-        await this.$fs.writeFile(Path.join(this.workingDirectory, name));
+        await this.$fs.writeFile(Path.join(this.path, name));
 
         // Reload the directory list
         this.listDirectory();

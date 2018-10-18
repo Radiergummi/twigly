@@ -5,7 +5,9 @@
     <app-menu/>
     <main class="app-content">
       <transition :name="transition">
-        <router-view class="current-view"/>
+        <keep-alive>
+          <router-view class="current-view"/>
+        </keep-alive>
       </transition>
     </main>
   </div>
