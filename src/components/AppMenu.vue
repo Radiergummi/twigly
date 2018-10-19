@@ -21,6 +21,7 @@
 
 <style scoped>
   .app-menu {
+    position: relative;
     grid-area: menu;
     display: flex;
     flex-direction: column;
@@ -30,6 +31,7 @@
     background: var(--color-chrome);
     transition: inherit;
     user-select: none;
+    z-index: 1;
   }
 
   .menu-item + .menu-item {

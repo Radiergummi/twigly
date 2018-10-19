@@ -27,17 +27,23 @@
         />
       </div>
     </nav>
-    <div class="editor-content">
-      <code-editor
-        v-if="file === currentFile"
-        v-for="file in files"
-        :key="file.path"
-        :file="file"
-        :auto-save="autoSaveEnabled"
-      />
-      <variables-panel v-if="currentFile"/>
-      <empty-state v-if="!files.length" icon="insert_drive_file" message="No open file"/>
-    </div>
+    <multipane class="editor-content" layout="horizontal">
+      <multipane layout="vertical" class="input-area">
+        <code-editor
+          v-if="file === currentFile"
+          v-for="file in files"
+          :key="file.path"
+          :file="file"
+          :auto-save="autoSaveEnabled"
+          class="pane"
+        />
+        <multipane-resizer class="multipane-resizer-vertical"/>
+        <variables-panel v-if="currentFile" class="pane"/>
+      </multipane>
+      <multipane-resizer class="multipane-resizer-horizontal"/>
+      <div class="preview-area pane"></div>
+    </multipane>
+    <empty-state v-if="!files.length" icon="insert_drive_file" message="No open file"/>
     <modal-dialog :visible.sync="openFileModalVisible" title="Open file">
       <directory-browser path="/" @open="openFile"/>
     </modal-dialog>
@@ -45,6 +51,7 @@
 </template>
 
 <script>
+  import { Multipane, MultipaneResizer } from "vue-multipane";
   import EmptyState from "@/components/EmptyState";
   import IconButton from "@/components/Buttons/IconButton";
   import MaterialIcon from "@/components/MaterialIcon";
@@ -60,6 +67,8 @@
     name: "EditorView",
 
     components: {
+      Multipane,
+      MultipaneResizer,
       IconButton,
       MaterialIcon,
       EmptyState,
@@ -93,46 +102,51 @@
     },
 
     beforeRouteEnter(to, from, next) {
-      console.log("before enter");
       return next(async vm => {
-        await vm.loadFile();
+        await vm.loadFile(vm.file);
 
         if (vm.files.length === 0) {
           vm.openFilePicker();
         }
+
+        await vm.loadSettings();
       });
     },
 
-    async mounted() {
-      this.autoSaveEnabled = await this.$settings.value(
-        "editorAutoSaveEnabled",
-        false
-      );
-    },
-
     methods: {
-      async loadFile() {
-        if (!this.file) {
+      async loadSettings() {
+        this.autoSaveEnabled = await this.$settings.value(
+          "editorAutoSaveEnabled",
+          false
+        );
+      },
+
+      async loadFile(pathOrFile) {
+        if (!pathOrFile) {
           return;
         }
 
-        let file;
-        console.log(this.getFile(this.file));
+        let file = this.getFile(pathOrFile);
+
         // If this file is already opened, focus the tab
-        if ((file = this.getFile(this.file))) {
+        if (file) {
           return this.switchTab(file);
         }
 
-        file = await this.$fs.get(this.file);
+        file =
+          typeof pathOrFile === "string"
+            ? await this.$fs.get(pathOrFile)
+            : pathOrFile;
 
-        console.log(this.file, file, this.files, this.files.includes(file));
         // Add the new file
         this.files.push(file);
         this.currentFile = file;
       },
 
-      getFile(path) {
-        return this.files.find(file => file.path === path);
+      getFile(fileOrPath) {
+        const filePath =
+          typeof fileOrPath === "string" ? fileOrPath : fileOrPath.path;
+        return this.files.find(file => file.path === filePath);
       },
 
       closeTab({ slug }) {
@@ -158,9 +172,9 @@
         this.openFileModalVisible = true;
       },
 
-      openFile(file) {
-        this.files.push(file);
-        this.currentFile = file;
+      async openFile(file) {
+        console.log("going to open ", file);
+        await this.loadFile(file);
         this.closeFilePicker();
       }
     }
@@ -314,15 +328,88 @@
   .editor-content {
     display: flex;
     height: calc(100% - 0.5rem);
+    overflow: hidden;
+  }
+
+  .editor-content .pane {
+    overflow: hidden;
+    box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  .layout-v .pane {
+    min-height: 100%;
+    max-height: 100%;
+  }
+
+  .editor-content .multipane,
+  .editor-content .multipane-resizer {
+    position: relative;
+    z-index: unset;
   }
 
   .editor-content .code-editor {
-    flex: 1 1 auto;
-    box-shadow: inset -1px 1px 3px -1px rgba(0, 0, 0, 0.25);
+    min-width: 60%;
   }
 
   .editor-content .variables-panel {
-    flex: 0 0 20%;
+    flex-grow: 1;
+    min-width: 20%;
+  }
+
+  .editor-content .input-area {
+    min-height: 20%;
+  }
+
+  .editor-content .preview-area {
+    flex-grow: 1;
+    min-height: 20%;
+    box-shadow: inset 1px 1px 3px -1px rgba(0, 0, 0, 0.25);
+  }
+
+  .editor-content .multipane-resizer-vertical {
+    position: relative;
+    left: 0;
+    width: 8px;
+    margin-left: 0;
+    background: var(--color-chrome);
+  }
+
+  .editor-content.layout-h .multipane-resizer-horizontal {
+    position: relative;
+    top: 0;
+    height: 8px;
+    margin-top: 0;
+    background: var(--color-chrome);
+  }
+
+  .editor-content .multipane-resizer::after {
+    content: "";
+    position: absolute;
+    border-style: solid;
+    border-color: var(--color-dim);
+    transition: all 0.125s;
+  }
+
+  .editor-content .multipane-resizer:hover::after {
+    border-color: var(--color-inactive);
+  }
+
+  .editor-content .multipane-resizer-vertical::after {
+    top: 50%;
+    left: 2.5px;
+    transform: translateY(-50%);
+    height: 4rem;
+    width: 1px;
+    border-width: 0 1px;
+  }
+
+  .editor-content .multipane-resizer-horizontal::after {
+    left: 50%;
+    top: 2.5px;
+    transform: translateX(-50%);
+    width: 4rem;
+    height: 1px;
+    border-width: 1px 0;
   }
 </style>
  

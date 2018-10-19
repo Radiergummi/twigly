@@ -33,6 +33,7 @@
     color: #fff;
     cursor: pointer;
     transition: all 0.25s;
+    z-index: 10;
   }
 
   .floating-action-button:focus,

@@ -81,7 +81,6 @@
 <style scoped>
   .code-editor {
     display: flex;
-    height: calc(100% - 2rem);
     padding: 1rem;
   }
 

@@ -30,6 +30,7 @@
 
 <style scoped>
   .empty-state {
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
