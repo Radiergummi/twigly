@@ -93,7 +93,7 @@ Numeric timestamp an item has been created on the filesystem.
 ##### `mtime`
 Numeric timestamp an item has been modified on the filesystem. This includes changes to file content and certain metadata fields.
 
-##### `ctime`
+##### `atime`
 Numeric timestamp an item has been accessed on the filesystem. This includes most read operations of file content or metadata.
 
 ##### `size`
