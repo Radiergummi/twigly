@@ -84,6 +84,15 @@ Retrieves the full metadata object for the given path. This will fail if the pat
 Retrieves a `FileSystemItem` instance for the given path. This can be either a `FileSystemFile` or a `FileSystemDirectory`, each of which provide additional convenience methods to work with the requested item.  
 These objects can be created for virtual (eg., non-existing) files but have to be connected to a `FileSystem` instance by using the `filesystem` setter on the file for any actual file system operations to be carried out.
 
+##### `getUsedSpace(): Promise<Number>`
+Retrieves the amount of bytes currently occupied on the file system.
+
+##### `getTotalSpace(): Promise<Number>`
+Retrieves the total amount of bytes available on the file system, the "disk" size, if you will.
+
+##### `getAvailable(): Promise<Number>`
+Retrieves the amount of available, non-occupied bytes on the file system. A default implementation is included that will simply substract the used bytes from the total bytes, relying on the respective methods.
+
 #### Metadata
 Twigly provides a basic set of metadata for both files and directories. The following fields are available and will be automatically set:
 

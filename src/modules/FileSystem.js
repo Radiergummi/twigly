@@ -82,21 +82,21 @@ class FileSystem {
    *
    * @returns {Number}
    */
-  async getUsed() { }
+  async getUsedSpace() { }
 
   /**
    * Retrieves the available space in bytes
    * 
    * @returns {Number}
    */
-  async getTotal() { }
+  async getTotalSpace() { }
 
   /**
    * Retrieves the available space in bytes
    * 
    * @returns {Number}
    */
-  async getAvailable() {
+  async getAvailableSpace() {
     const [total, used] = await Promise.all([
       this.getTotal(),
       this.getUsed()
