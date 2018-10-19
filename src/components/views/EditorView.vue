@@ -370,11 +370,12 @@
     position: relative;
     left: 0;
     width: 8px;
+    height: auto;
     margin-left: 0;
     background: var(--color-chrome);
   }
 
-  .editor-content.layout-h .multipane-resizer-horizontal {
+  .editor-content .multipane-resizer-horizontal {
     position: relative;
     top: 0;
     height: 8px;
