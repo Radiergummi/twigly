@@ -45,7 +45,8 @@
 
 .button.button.button-primary:disabled {
   background: var(--color-dim);
-  box-shadow: none;  
+  box-shadow: none;
+  cursor: default;
 }
 
 .button.button-primary:focus,

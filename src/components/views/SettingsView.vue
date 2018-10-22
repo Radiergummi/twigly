@@ -4,15 +4,21 @@
       <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
       <section class="editor-settings">
         <div class="setting">
-          <label
-            for="setting-editorAutoSaveEnabled"
-          >Whether to enable or disable the auto-save feature of the editor.</label>
-          <input
-            type="checkbox"
-            id="setting-editorAutoSaveEnabled"
+          <checkbox-field
+            name="editorAutoSaveEnabled"
+            label="Whether to enable or disable the auto-save feature of the editor."
             v-model="settings.editorAutoSaveEnabled"
-          >
+          />
         </div>
+        <text-field
+          v-model="test"
+          name="test"
+          label="Testfield"
+          help="Foo bar baz"
+          :minlength="15"
+          :maxlength="25"
+          :required="true"
+        />
       </section>
       <section class="danger-zone">
         <header>
@@ -54,6 +60,8 @@
   import Page from "@/components/Page";
   import EmptyState from "@/components/EmptyState";
   import FloatingActionButton from "@/components/FloatingActionButton";
+  import CheckboxField from "@/components/Fields/CheckboxField";
+  import TextField from "@/components/Fields/TextField";
 
   export default {
     name: "SettingsView",
@@ -62,7 +70,9 @@
       Page,
       ModalDialog,
       EmptyState,
-      FloatingActionButton
+      FloatingActionButton,
+      CheckboxField,
+      TextField
     },
 
     props: {
@@ -79,6 +89,8 @@
         defaultSettings: {
           editorAutoSaveEnabled: false
         },
+
+        test: "",
 
         settings: null,
 

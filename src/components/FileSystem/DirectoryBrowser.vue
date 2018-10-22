@@ -28,9 +28,21 @@
       v-if="showActions"
       icon="add"
       :actions="actions"
-      @action-new-directory="createDirectory"
-      @action-new-file="createFile"
+      @action-new-directory="directoryNameModalVisible = true"
+      @action-new-file="fileNameModalVisible = true"
       @action-new-upload="startUpload"
+    />
+    <modal-prompt
+      :visible.sync="directoryNameModalVisible"
+      label="Name of the new directory"
+      type="text"
+      @confirm="createDirectory"
+    />
+    <modal-prompt
+      :visible.sync="fileNameModalVisible"
+      label="Name of the new file"
+      type="text"
+      @confirm="createFile"
     />
   </article>
 </template>
@@ -42,6 +54,7 @@
   import PathBreadcrumbs from "@/components/FileSystem/PathBreadcrumbs";
   import FloatingActionButtonSpeedDial from "@/components/FloatingActionButtonSpeedDial";
   import EmptyState from "@/components/EmptyState";
+  import ModalPrompt from "@/components/Modals/ModalPrompt";
 
   export default {
     name: "DirectoryBrowser",
@@ -51,13 +64,19 @@
       FileListParentEntry,
       PathBreadcrumbs,
       FloatingActionButtonSpeedDial,
-      EmptyState
+      EmptyState,
+      ModalPrompt
     },
 
     props: {
       path: {
         type: String,
         default: "/"
+      },
+
+      directoriesOnly: {
+        type: Boolean,
+        default: false
       },
 
       showActions: {
@@ -74,7 +93,10 @@
           { name: "new-directory", icon: "folder", label: "New folder" },
           { name: "new-file", icon: "insert_drive_file", label: "New file" },
           { name: "new-upload", icon: "cloud_upload", label: "Upload" }
-        ]
+        ],
+
+        directoryNameModalVisible: false,
+        fileNameModalVisible: false
       };
     },
 
@@ -140,9 +162,7 @@
        * Creates a new directory
        * TODO: Real prompt
        */
-      async createDirectory() {
-        const name = prompt("Please enter the name of the new directory:");
-
+      async createDirectory(name) {
         if (!name) {
           return;
         }
@@ -154,9 +174,7 @@
         this.listDirectory();
       },
 
-      async createFile() {
-        const name = prompt("Please enter the name of the new file:");
-
+      async createFile(name) {
         if (!name) {
           return;
         }

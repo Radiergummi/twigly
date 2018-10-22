@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-container">
+  <div :class="'modal-container' + (visible ? ' visible' : '')">
     <transition name="fade">
       <div class="modal-backdrop" @click="close" v-show="visible"></div>
     </transition>
@@ -78,33 +78,34 @@
     left: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     height: 100%;
-    z-index: 10;
-    pointer-events: none;
+    z-index: -1;
+  }
+
+  .modal-container.visible {
+    overflow-y: auto;
+    z-index: 1;
   }
 
   .modal-backdrop {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 11;
     background: rgba(0, 0, 0, 0.5);
-    pointer-events: all;
   }
 
   .modal-dialog {
     position: relative;
+    margin: 10vh 0;
     min-width: 25vw;
     border-radius: 3px;
-    z-index: 12;
     background: var(--color-chrome);
     box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.5),
       0 2px 15px -2px rgba(0, 0, 0, 0.25);
-    pointer-events: all;
   }
 
   .modal-dialog-header {
@@ -116,6 +117,7 @@
 
   .modal-dialog-title {
     margin: 0 1rem 0 0;
+    user-select: none;
   }
 
   .modal-dialog-close-button {

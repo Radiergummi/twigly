@@ -1,6 +1,7 @@
 .field {
   position: relative;
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   line-height: 1;
   font-size: 1rem;
@@ -10,7 +11,7 @@
 
 .field .field-label {
   position: absolute;
-  flex: 1 1 100%;
+  flex: 1 0 auto;
   top: 1rem;
   left: 0;
   border-top: 1.5px solid transparent;
@@ -19,13 +20,34 @@
   line-height: inherit;
   transition: inherit;
   color: var(--color-inactive);
+  pointer-events: none;
   user-select: none;
   cursor: text;
 }
 
+.field .field-extra {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: space-between; 
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1;
+  user-select: none;
+  opacity: 1;
+  transition: inherit;
+}
+
+.field .field-input.pristine ~ .field-extra {
+  opacity: 0;
+}
+
+.field .field-extra .field-error {
+  color: var(--color-red);
+}
+
 .field .field-input {
   -webkit-appearance: none;
-  flex: 1 1 100%;
+  flex: 1 0 100%;
   padding: 1rem 0 0.25rem;
   border: none;
   border-bottom: 1px solid var(--color-dim);
@@ -47,8 +69,8 @@
   border-bottom: 1px solid var(--color-primary);
 }
 
-.field .field-input:invalid,
-.field .field-input.invalid {
+.field .field-input:not(.pristine):invalid,
+.field .field-input:not(.pristine).invalid {
   border-bottom: 1px solid var(--color-red);
 }
 
@@ -60,8 +82,8 @@
   cursor: default;
 }
 
-.field:focus-within .field-input:invalid,
-.field:focus-within .field-input.invalid {
+.field:focus-within .field-input:not(.pristine):invalid,
+.field:focus-within .field-input:not(.pristine).invalid {
   border-bottom: 1px solid var(--color-red);
   box-shadow: 0 1px 0 0 var(--color-red);
 }
@@ -76,8 +98,15 @@
   color: var(--color-primary);
 }
 
-.field .field-input:invalid + .field-label,
-.field .field-input.invalid + .field-label {
+.field .field-input:not(.pristine):invalid + .field-label,
+.field .field-input:not(.pristine).invalid + .field-label {
+  color: var(--color-red);
+}
+
+.field .field-input:required + .field-label::after {
+  content: '*';
+  margin-left: 0.125rem;
+  font-weight: bold;
   color: var(--color-red);
 }
 

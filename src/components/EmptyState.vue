@@ -35,6 +35,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: calc(100% - 4rem);
     padding: 2rem;
     color: var(--color-dim);
     user-select: none;

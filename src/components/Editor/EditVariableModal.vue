@@ -2,15 +2,15 @@
   <modal-dialog
     :visible="visible"
     title="Add variable"
-    :actions="[{ name: 'add', label: 'add', primary: true, disabled: !variable.name }]"
-    @action-add="addVariable"
+    :actions="[{ name: 'save', label: 'Save', primary: true, disabled: !variable.name }]"
+    @action-save="updateVariable"
     @update:visible="close"
   >
     <text-field
       name="name"
       label="Name"
       v-model="variable.name"
-      @submit="addVariable"
+      @submit="updateVariable"
       ref="nameInput"
     />
     <select-field name="type" label="Type" v-model="variable.type" :options="typeOptions"/>
@@ -21,7 +21,7 @@
       v-if="!variableTypeIsNull"
       v-model="variable.value"
       :valid="variable.valid"
-      @submit="addVariable"
+      @submit="updateVariable"
     />
   </modal-dialog>
 </template>
@@ -30,6 +30,7 @@
   import IconButton from "@/components/Buttons/IconButton";
   import MaterialIcon from "@/components/MaterialIcon";
   import ModalDialog from "@/components/Modals/ModalDialog";
+  import InputField from "@/components/Fields/InputField";
   import TextField from "@/components/Fields/TextField";
   import NumberField from "@/components/Fields/NumberField";
   import CheckboxField from "@/components/Fields/CheckboxField";
@@ -37,7 +38,7 @@
   import SelectField from "@/components/Fields/SelectField";
 
   export default {
-    name: "AddVariableModal",
+    name: "EditVariableModal",
 
     components: {
       MaterialIcon,
@@ -54,17 +55,16 @@
       visible: {
         type: Boolean,
         required: true
+      },
+
+      variable: {
+        type: Object,
+        required: true
       }
     },
 
     data() {
       return {
-        variable: {
-          name: "",
-          type: "string",
-          value: null
-        },
-
         typeOptions: {
           "Scalar Types": {
             string: "String",
@@ -115,6 +115,9 @@
 
           case "json":
             return "TextareaField";
+
+          default:
+            return "TextField";
         }
       },
 
@@ -128,23 +131,16 @@
     },
 
     methods: {
-      addVariable() {
+      updateVariable() {
         const value =
           this.variable.type === "json"
             ? JSON.parse(this.variable.value)
             : this.variable.value;
 
-        this.$emit("add", {
+        this.$emit("update", {
           name: this.variable.name,
           value: this.variable.value
         });
-
-        // Reset the new variable data
-        this.variable = {
-          name: "",
-          type: "string",
-          value: null
-        };
 
         this.close();
       },

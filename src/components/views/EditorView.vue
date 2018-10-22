@@ -27,7 +27,7 @@
         />
       </div>
     </nav>
-    <multipane class="editor-content" layout="horizontal">
+    <multipane class="editor-content" layout="horizontal" v-if="files.length">
       <multipane layout="vertical" class="input-area">
         <code-editor
           v-if="file === currentFile"
@@ -45,7 +45,7 @@
     </multipane>
     <empty-state v-if="!files.length" icon="insert_drive_file" message="No open file"/>
     <modal-dialog :visible.sync="openFileModalVisible" title="Open file">
-      <directory-browser path="/" @open="openFile"/>
+      <directory-browser :path.sync="fileBrowserPath" @open="openFile"/>
     </modal-dialog>
   </article>
 </template>
@@ -97,7 +97,9 @@
 
         autoSaveEnabled: false,
 
-        openFileModalVisible: false
+        openFileModalVisible: false,
+
+        fileBrowserPath: "/"
       };
     },
 
@@ -173,7 +175,6 @@
       },
 
       async openFile(file) {
-        console.log("going to open ", file);
         await this.loadFile(file);
         this.closeFilePicker();
       }
@@ -190,6 +191,7 @@
     justify-content: flex-start;
     align-items: center;
     min-height: 2.5rem;
+    margin-left: -1rem;
     padding-top: 5px;
     border-bottom: 3px solid var(--color-chrome);
     background-color: var(--color-white-dark);
@@ -199,6 +201,8 @@
 
   .editor-tab {
     position: relative;
+    flex: 0 1 10rem;
+    overflow: hidden;
     margin: 0 -1.5rem 0 0;
     padding: 0 0.25rem;
     left: 1rem;
@@ -240,6 +244,7 @@
   .editor-tab-content {
     display: flex;
     align-items: center;
+    overflow: hidden;
     justify-content: space-between;
     margin: 0 0.5rem;
     padding: 0.5rem 0.5rem 0.5rem 0.75rem;
@@ -250,6 +255,13 @@
     outline: none;
     user-select: none;
     transition: inherit;
+  }
+
+  .editor-tab-content .editor-tab-label {
+    display: block;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .editor-tab-active .editor-tab-content {
@@ -316,6 +328,7 @@
   }
 
   .actions {
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     margin: 0 0.5rem 0 auto;
@@ -323,6 +336,10 @@
 
   .actions .action + .action {
     margin-left: 0.5rem;
+  }
+
+  .editor-tab:nth-last-child(2) {
+    margin-right: 1rem;
   }
 
   .editor-content {
@@ -386,31 +403,30 @@
   .editor-content .multipane-resizer::after {
     content: "";
     position: absolute;
-    border-style: solid;
-    border-color: var(--color-dim);
+    background: var(--color-dim);
+    border-radius: 6px;
     transition: all 0.125s;
   }
 
+  .multipane.is-resizing > .multipane-resizer::after,
   .editor-content .multipane-resizer:hover::after {
-    border-color: var(--color-inactive);
+    background: var(--color-primary);
   }
 
   .editor-content .multipane-resizer-vertical::after {
     top: 50%;
-    left: 2.5px;
+    left: 3px;
     transform: translateY(-50%);
     height: 4rem;
-    width: 1px;
-    border-width: 0 1px;
+    width: 2px;
   }
 
   .editor-content .multipane-resizer-horizontal::after {
     left: 50%;
-    top: 2.5px;
+    top: 3px;
     transform: translateX(-50%);
     width: 4rem;
-    height: 1px;
-    border-width: 1px 0;
+    height: 2px;
   }
 </style>
  
