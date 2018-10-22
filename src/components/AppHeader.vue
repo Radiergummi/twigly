@@ -5,13 +5,26 @@
       <span class="breadcrumb-separator material-icons">arrow_right</span>
       <span :class="'current-module breadcrumb' + (navigated ? ' navigated' : '')">{{ breadcrumb }}</span>
     </nav>
-    <button class="switch-theme-button" @click="switchTheme" title="Switch theme"></button>
+    <icon-button
+      icon="invert_colors"
+      class="switch-theme-button"
+      @click="switchTheme"
+      title="Switch theme"
+    />
   </header>
 </template>
 
 <script>
+  import MaterialIcon from "@/components/MaterialIcon";
+  import IconButton from "@/components/Buttons/IconButton";
+
   export default {
     name: "AppHeader",
+
+    components: {
+      MaterialIcon,
+      IconButton
+    },
 
     data() {
       return {
@@ -83,22 +96,17 @@
     color: var(--color-chrome-text);
   }
 
-  .switch-theme-button {
-    -webkit-appearance: none;
-    border: none;
-    width: 2rem;
-    height: 2rem;
+  .app-header >>> .button.icon-button.switch-theme-button {
     margin-right: 1rem;
-    border-radius: 50%;
     box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.25);
     background: var(--color-alternative-theme);
-    cursor: pointer;
-    outline: none;
-    transition: inherit;
+    color: var(--color-alternative-theme-text);
   }
 
-  .switch-theme-button:focus,
-  .switch-theme-button:hover {
+  .app-header >>> .button.icon-button.switch-theme-button:focus,
+  .app-header >>> .button.icon-button.switch-theme-button:hover {
+    background: var(--color-alternative-theme);
+    color: var(--color-primary);
     box-shadow: 0 1px 8px -1px rgba(0, 0, 0, 0.75);
   }
 

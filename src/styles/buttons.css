@@ -43,7 +43,7 @@
   box-shadow: var(--shadow-raised);
 }
 
-.button.button.button-primary:disabled {
+.button.button-primary:disabled {
   background: var(--color-dim);
   box-shadow: none;
   cursor: default;
@@ -64,24 +64,24 @@
   border-radius: 50%; 
 }
 
-.button.button.icon-button:focus, 
-.button.button.icon-button:hover {
+.button.icon-button:focus, 
+.button.icon-button:hover {
   background: var(--color-interactive-highlight);
   color: var(--color-primary); 
   box-shadow: none;
 }
 
-.button.button.icon-button.small {
+.button.icon-button.small {
   width: 1.5rem;
   height: 1.5rem;
 }
 
-.button.button.icon-button.extra-small {
+.button.icon-button.extra-small {
   width: 1rem;
   height: 1rem;
 }
 
-.button.button.icon-button.extra-small .material-icons {
+.button.icon-button.extra-small .material-icons {
   font-size: 0.8rem;
   line-height: 1rem;
 }

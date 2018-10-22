@@ -60,6 +60,7 @@
     font-size: 1.4rem;
     text-decoration: none;
     color: var(--color-chrome-text);
+    outline: none;
     transition: inherit;
   }
 

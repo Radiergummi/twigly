@@ -1,7 +1,7 @@
 <template>
   <article class="directory-browser" v-if="currentDirectoryContents">
     <header class="directory-info">
-      <path-breadcrumbs :path="path"/>
+      <path-breadcrumbs :path="path" @navigate="navigate"/>
     </header>
     <ul class="current-path-content">
       <file-list-parent-entry
@@ -9,6 +9,7 @@
         class="current-path-item parent-item"
         :path="parentDirectory"
         @click.native="navigate(parentDirectory)"
+        @keyup.enter.native.prevent="navigate(parentDirectory)"
       />
       <file-list-entry
         class="current-path-item"
@@ -17,6 +18,7 @@
         :key="path"
         @delete="deleteItem(path)"
         @click.native="navigate(path)"
+        @keyup.enter.native.prevent="navigate(path)"
       />
     </ul>
     <empty-state
@@ -102,6 +104,7 @@
 
     watch: {
       path() {
+        console.log("path change");
         this.listDirectory();
       }
     },

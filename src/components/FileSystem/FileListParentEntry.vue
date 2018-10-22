@@ -1,5 +1,5 @@
 <template>
-  <li class="file-list-entry" v-if="file">
+  <li class="file-list-entry" v-if="file" tabindex="0">
     <span class="item-icon material-icons">arrow_upward</span>
     <span class="item-name">..</span>
   </li>
@@ -23,8 +23,8 @@
     border-bottom: 1px solid var(--color-gutter);
     background: var(--color-interactive);
     cursor: pointer;
+    outline: none;
     transition: all 0.125s;
-    user-select: none;
   }
 
   .file-list-entry:focus,

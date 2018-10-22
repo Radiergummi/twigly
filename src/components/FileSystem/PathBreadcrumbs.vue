@@ -1,11 +1,12 @@
 <template>
   <nav class="path-breadcrumbs">
-    <template v-for="breadcrumb in breadcrumbs">
+    <template v-for="(breadcrumb, index) in breadcrumbs">
       <span :key="'sep-' + breadcrumb" class="path-breadcrumb-separator">/</span>
       <router-link
         :key="breadcrumb"
         :to="route(breadcrumb)"
         class="path-breadcrumb"
+        :tabindex="index < breadcrumbs.length - 1 ? '0' : '-1'"
       >{{ breadcrumb }}</router-link>
     </template>
     <span v-if="!breadcrumbs.length" class="path-breadcrumb-separator">/</span>
@@ -68,6 +69,7 @@
     text-decoration: none;
     border-radius: 3px;
     color: var(--color-gray);
+    outline: none;
     transition: all 0.125s;
   }
 

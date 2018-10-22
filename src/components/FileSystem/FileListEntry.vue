@@ -1,5 +1,5 @@
 <template>
-  <li class="file-list-entry" v-if="file">
+  <li class="file-list-entry" v-if="file" tabindex="0">
     <span class="item-icon material-icons">{{ icon }}</span>
     <span class="item-name">{{ file.name }}</span>
     <span class="item-size" v-if="!isDirectory">{{ meta.size }}&hairsp;B</span>
@@ -80,10 +80,11 @@
     border-bottom: 1px solid var(--color-gutter);
     background: var(--color-interactive);
     cursor: pointer;
+    outline: none;
     transition: all 0.125s;
   }
 
-  .file-list-entry:focus,
+  .file-list-entry:focus-within,
   .file-list-entry:hover {
     background: var(--color-interactive-highlight);
   }
@@ -119,6 +120,7 @@
     color: var(--color-interactive-label);
     transition: all 0.125s;
     user-select: none;
+    outline: none;
   }
 
   .delete-item-button:focus,

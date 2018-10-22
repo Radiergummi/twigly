@@ -39,6 +39,12 @@
       };
     },
 
+    watch: {
+      path() {
+        this.currentPath = Path.normalize("/" + this.path);
+      }
+    },
+
     mounted() {
       this.currentPath = Path.normalize("/" + this.path);
     },

@@ -10,6 +10,7 @@
         :key="index"
         @click="emitAction(action)"
         :data-label="action.label"
+        :tabindex="open ? 0 : -1"
       >
         <span class="material-icons">{{ action.icon }}</span>
       </button>

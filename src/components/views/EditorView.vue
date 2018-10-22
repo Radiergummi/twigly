@@ -8,7 +8,7 @@
         @click="switchTab(file)"
       >
         <div class="editor-tab-content">
-          <span class="editor-tab-label">{{ file.name }}</span>
+          <span class="editor-tab-label" :title="file.path">{{ file.name }}</span>
           <icon-button
             icon="close"
             @click.stop="closeTab(file)"
